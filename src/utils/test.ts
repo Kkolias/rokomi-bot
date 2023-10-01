@@ -3,7 +3,7 @@ import liigaUtil from "./Liiga";
 
 async function testi() {
 
-    const games = await liigaUtil.getTodaysRunkosarjaGames()
+    const games = await liigaUtil.getTodaysLiigaGames()
     
     const parsedGames = liigaUtil.parseTeamsFromGames(games)
     console.log(games)

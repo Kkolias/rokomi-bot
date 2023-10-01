@@ -42,7 +42,7 @@ client.on("interactionCreate", async (i) => {
     i.reply(textWithPrefix);
   }
   if(i.commandName === 'liigatoday') {
-    const todayGames = await liigaUtil.getTodaysRunkosarjaGames()
+    const todayGames = await liigaUtil.getTodaysLiigaGames()
     const parsedGames = liigaUtil.parseTeamsFromGames(todayGames)
 
     const output = parsedGames?.map(g => `${g}\n`).join('')
