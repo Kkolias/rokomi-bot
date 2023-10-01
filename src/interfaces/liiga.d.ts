@@ -1,9 +1,5 @@
+import { LiigaSeries } from "enums/liiga.enum";
 
-export enum LiigaSeries {
-    RUNKOSARJA = 'RUNKOSARJA',
-    CHL = 'CHL',
-    PLAYOFFS = 'PLAYOFFS'
-}
 
 export interface LiigaGame {
   id: number;

@@ -1,7 +1,7 @@
 import { Client, IntentsBitField } from "discord.js";
 import userIsBot from "./utils/userIsBot";
 import { commands } from "./utils/registerCommands";
-import liigaUtil from "./utils/Liiga";
+import liigaCommandHandler from "./commandHandlers/LiigaCommands";
 require("dotenv").config();
 
 const options = {
@@ -14,6 +14,15 @@ const options = {
 };
 
 const client = new Client(options);
+
+// client?.user?.setPresence({
+//   activities: [{
+//       name: 'asdasd',
+//       type: ActivityType.Playing,
+//       url: 'youtube.com'
+//   }],
+//   status: 'online'
+// });
 
 client.on("ready", (c) => console.log(`🔥 ${c.user.tag} is online!`));
 
@@ -41,11 +50,8 @@ client.on("interactionCreate", async (i) => {
     const textWithPrefix = `Komento | Kuvaus\n ${text}`;
     i.reply(textWithPrefix);
   }
-  if(i.commandName === 'liigatoday') {
-    const todayGames = await liigaUtil.getTodaysLiigaGames()
-    const parsedGames = liigaUtil.parseTeamsFromGames(todayGames)
-
-    const output = parsedGames?.map(g => `${g}\n`).join('')
+  if (i.commandName === "liigatoday") {
+    const output = await liigaCommandHandler.liigaToday()
     i.reply(output)
   }
 });
