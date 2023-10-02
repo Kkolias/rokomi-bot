@@ -10,11 +10,11 @@ async function testi() {
     // console.log(games)
     // const output = parsedGames?.map(g => `${g}\n`).join('')
     // console.log(output)
-    const allGames = await liigaUtil.getRunkosarjaGames('2024')
-    const today = new Date()
-    const todayISO = parseISODate(today)
+    // const allGames = await liigaUtil.getRunkosarjaGames('2024')
+    // const today = new Date()
+    // const todayISO = parseISODate(today)
 
-    const test = liigaUtil.getNextGameDayLiigaGames(allGames, todayISO)
+    const test = await liigaUtil.getParsedSingleGameStats(58)
     console.log(test)
 }
 

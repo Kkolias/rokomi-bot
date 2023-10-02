@@ -54,6 +54,11 @@ client.on("interactionCreate", async (i) => {
     const output = await liigaCommandHandler.liigaToday()
     i.reply(output)
   }
+  if (i.commandName.includes("gameodds")) {
+    const id = (i.options.get('id')?.value || 0) as number
+    const output = await liigaCommandHandler.gameOdds(id)
+    i.reply(output)
+  }
 });
 
 const token = process.env.BOT_TOKEN;

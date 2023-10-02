@@ -1,5 +1,5 @@
 import { REST } from "@discordjs/rest";
-import { Routes } from "discord.js";
+import { ApplicationCommandOptionType, Routes } from "discord.js";
 
 require("dotenv").config();
 
@@ -23,7 +23,19 @@ export const commands = [
   {
     name: 'liigatoday',
     description: 'Liigapelit tänään'
-  }
+  },
+  {
+    name: 'gameodds',
+    description: 'Kertoimet ottelulle /gameodds <id>',
+    options: [
+      {
+        type: ApplicationCommandOptionType.Number,
+        name: "id",
+        description: 'ottelun id',
+        required: true
+      }
+    ]
+  },
 ];
 
 const rest = new REST({ version: "10" }).setToken(token);

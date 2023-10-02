@@ -3,6 +3,10 @@ import liigaUtil from "../utils/Liiga";
 import { LiigaGame } from "interfaces/liiga";
 
 export class LiigaCommandHandler {
+  async gameOdds(gameId: number): Promise<string> {
+    return await liigaUtil.getParsedSingleGameStats(gameId)
+  }
+
   async liigaToday(): Promise<string> {
     const allGames = await liigaUtil.getSeasonLiigaGames();
     const todayGames = liigaUtil.getTodaysLiigaGames(allGames);
