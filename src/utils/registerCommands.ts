@@ -36,6 +36,22 @@ export const commands = [
       }
     ]
   },
+  {
+    name: 'userstats',
+    description: 'stats of user'
+  },
+  {
+    name: 'addmybalance',
+    description: 'lisää sulle fyffee',
+    options: [
+      {
+        type: ApplicationCommandOptionType.Number,
+        name: "amount",
+        description: 'rahuli määrä joka lisätään',
+        required: true
+      }
+    ]
+  },
 ];
 
 const rest = new REST({ version: "10" }).setToken(token);

@@ -2,6 +2,9 @@ import { Client, IntentsBitField } from "discord.js";
 import userIsBot from "./utils/userIsBot";
 import { commands } from "./utils/registerCommands";
 import liigaCommandHandler from "./commandHandlers/LiigaCommands";
+import userService from './user/userService'
+import mongoose from "mongoose";
+
 require("dotenv").config();
 
 const options = {
@@ -15,14 +18,16 @@ const options = {
 
 const client = new Client(options);
 
-// client?.user?.setPresence({
-//   activities: [{
-//       name: 'asdasd',
-//       type: ActivityType.Playing,
-//       url: 'youtube.com'
-//   }],
-//   status: 'online'
-// });
+// init mongoDB
+const mongoUrl = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.u2byesr.mongodb.net/` // dev
+
+
+
+mongoose.connect(mongoUrl, { dbName: 'rokomi-db' });
+
+
+
+
 
 client.on("ready", (c) => console.log(`🔥 ${c.user.tag} is online!`));
 
@@ -51,6 +56,7 @@ client.on("interactionCreate", async (i) => {
     i.reply(textWithPrefix);
   }
   if (i.commandName === "liigatoday") {
+    console.log(i.user)
     const output = await liigaCommandHandler.liigaToday()
     i.reply(output)
   }
@@ -58,6 +64,26 @@ client.on("interactionCreate", async (i) => {
     const id = (i.options.get('id')?.value || 0) as number
     const output = await liigaCommandHandler.gameOdds(id)
     i.reply(output)
+  }
+
+  if(i.commandName === 'userstats') {
+    const discordUser = i?.user
+    const { user, error } = await userService.findByIdOrCreate(discordUser)
+    
+    if(error) {
+      i.reply(error)
+    } else {
+      
+      i.reply(`${user?.id} - ${user?.name} - balance: ${user?.balance}`)
+    }
+  }
+
+  if(i.commandName === 'addmybalance') {
+    const discordUser = i?.user
+    const amount = (i.options.get('amount')?.value || 0) as number
+
+    const reply = await userService.handleAddBalanceToUser(discordUser, amount)
+    i.reply(reply)
   }
 });
 
