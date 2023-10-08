@@ -2,8 +2,8 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IUser extends Document {
   name: string;
-  id: String;
-  balance: Number;
+  id: string;
+  balance: number;
 }
 
 const UserSchema = new Schema<IUser>({

@@ -1,5 +1,6 @@
-import liigaUtil from "./Liiga";
-import { parseISODate } from "./time";
+import userService from "../user/userService";
+// import liigaUtil from "./Liiga";
+// import { parseISODate } from "./time";
 
 async function testi() {
   // const games = await liigaUtil.getTodaysLiigaGames()
@@ -18,7 +19,9 @@ async function testi() {
 
   // const sum = i + negativeX
 
-  const test = await liigaUtil.getParsedSingleGameStats(58);
+  // const test = await liigaUtil.getParsedSingleGameStats(58);
+  const test = await userService.findById('305765136348479490')
+  // const test = await userService.findByIdList(['305765136348479490'])
   console.log(test);
 }
 

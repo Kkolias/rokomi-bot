@@ -6,6 +6,10 @@ export class UserService {
     return await UserItem.findOne({ id });
   }
 
+  async findByIdList(idList: string[]): Promise<IUser[]> {
+    return await UserItem.find({ id: { $in: idList } });
+  }
+
   async getUserById(id: string): Promise<IUser | null> {
     const r = await UserItem.findOne({ id });
     if (!r) return null;
@@ -50,19 +54,39 @@ export class UserService {
 
     const currentBalance = (user?.balance || 0) as number;
     const newBalance = currentBalance + amount;
+    const correctNewBalance = newBalance < 0 ? 0 : newBalance;
 
-    user.balance = newBalance;
+    user.balance = correctNewBalance;
     await user.save();
 
     const updatedUser = await UserItem.findOne({ id });
     return { user: updatedUser, error: null };
   }
 
+  private getNegativeOfNumber(input: number): number {
+    if (input < 0) return input;
+    return -input;
+  }
+
   async decrementBalance(
     amount: number,
     id: string
   ): Promise<{ error: string | null; user: IUser | null }> {
-    return await this.addBalance(-amount, id);
+    return await this.addBalance(this.getNegativeOfNumber(amount), id);
+  }
+
+  async handleAddBalanceToAnotherUser(
+    discordUser: User,
+    userId: string,
+    amount: number
+  ): Promise<string> {
+    if (discordUser?.id !== "220887283342114816") return "Oikeudet eivät riitä";
+
+    const { user, error } = await this.addBalance(amount, userId);
+
+    if (error) return error;
+
+    return `selvä! lisätään ${amount} balancea käyttäjälle ${user?.name}. uusi balance: ${user?.balance}`;
   }
 
   async handleAddBalanceToUser(
@@ -74,17 +98,16 @@ export class UserService {
     if (uId !== "220887283342114816") {
       const { user, error } = await this.decrementBalance(amount, uId);
 
-      if(error) return error
+      if (error) return error;
 
-      return `selvä! vähennetään ${amount} balancesta. uusi balance: ${user?.balance}`
+      return `selvä! vähennetään ${amount} balancesta. uusi balance: ${user?.balance}`;
     }
 
     const { user, error } = await this.addBalance(amount, uId);
 
-    if(error) return error
+    if (error) return error;
 
-    return `selvä! lisätään ${amount} balanceen. uusi balance: ${user?.balance}`
-
+    return `selvä! lisätään ${amount} balanceen. uusi balance: ${user?.balance}`;
   }
 }
 

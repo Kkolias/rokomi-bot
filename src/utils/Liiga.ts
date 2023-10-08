@@ -2,6 +2,7 @@ import axios from "axios";
 import { getNextDayISO, getSeasonForDate, getTime, parseDate, parseISODate } from "./time";
 import { type SingleLiigaGame, type LiigaGame } from "../interfaces/liiga"
 import { LiigaSeries } from "../enums/liiga.enum";
+import getParsedGameOdds from "../bet/utils/getParsedGameOdds";
 
 const URLS = {
   LIIGA_GAMES: "https://liiga.fi/api/v1/games?tournament=all&season=",
@@ -10,26 +11,23 @@ const URLS = {
 
 export class LiigaUtil {
 
-  private async getSingleLiigaGame(season: string, gameId: number): Promise<SingleLiigaGame | null> {
+  // checkOpenBets Util
+  async getSingleLiigaGame(season: string, gameId: number): Promise<SingleLiigaGame | null> {
     const r = await axios.get(`${URLS.SINGLE_GAME}${season}/${gameId}`);
     return r?.data || null;
   }
 
-  private parseOdds(oddsRaw: number): number {
-    return oddsRaw / 100
-  }
+  // private parseOdds(oddsRaw: number): number {
+  //   return oddsRaw / 100
+  // }
 
   private parseSingleLiigaGame(game: SingleLiigaGame): string {
-    const oddsHomeTeamRaw = game?.game?.gamblingEvent?.homeTeamOdds
-    const oddsAwayTeamRaw = game?.game?.gamblingEvent?.awayTeamOdds
-    const tieOddsRaw = game?.game?.gamblingEvent?.tieOdds
-
     const homeTeam = game?.game?.homeTeam?.teamName
     const awayTeam = game?.game?.awayTeam?.teamName
 
-    const oddsHomeTeam = this.parseOdds(oddsHomeTeamRaw)
-    const oddsAwayTeam = this.parseOdds(oddsAwayTeamRaw)
-    const oddsTie = this.parseOdds(tieOddsRaw)
+    const { oddsHomeTeam, oddsAwayTeam, oddsTie } = getParsedGameOdds(game)
+
+    if(!oddsAwayTeam || !oddsHomeTeam || !oddsTie) return 'Kaikki kertoimia ei vielä annettu'
 
     return `${homeTeam} - ${awayTeam} - Tasapeli | ${oddsHomeTeam} - ${oddsAwayTeam} - ${oddsTie}`
   }

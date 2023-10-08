@@ -4,6 +4,8 @@ import { commands } from "./utils/registerCommands";
 import liigaCommandHandler from "./commandHandlers/LiigaCommands";
 import userService from './user/userService'
 import mongoose from "mongoose";
+import betService from "./bet/betService";
+import checkBetsUtil from './bet/utils/checkOpenBets'
 
 require("dotenv").config();
 
@@ -83,6 +85,26 @@ client.on("interactionCreate", async (i) => {
     const amount = (i.options.get('amount')?.value || 0) as number
 
     const reply = await userService.handleAddBalanceToUser(discordUser, amount)
+    i.reply(reply)
+  }
+
+  if(i.commandName === 'adduserbalance') {
+    const discordUser = i?.user
+    const amount = (i.options.get('amount')?.value || 0) as number
+    const id = (i.options.get('id')?.value || 0) as string
+
+    const reply = await userService.handleAddBalanceToAnotherUser(discordUser, id, amount)
+    i.reply(reply)
+  }
+
+  if(i.commandName === 'testi') {
+    // const test = await userService.findByIdList(['305765136348479490'])
+    // console.log("TESTI: ", test)
+    await betService.createTestBest()
+    i.reply('juu')
+  }
+  if(i.commandName === 'checkbets') {
+    const reply = await checkBetsUtil.execute()
     i.reply(reply)
   }
 });

@@ -9,6 +9,10 @@ const token = process.env.BOT_TOKEN as string
 
 export const commands = [
   {
+    name: 'testi',
+    description: 'test'
+  },
+  {
     name: "aamuja",
     description: "morgonia berkeleesti",
   },
@@ -52,6 +56,28 @@ export const commands = [
       }
     ]
   },
+  {
+    name: 'adduserbalance',
+    description: 'lisää käyttäjälle fyffee',
+    options: [
+      {
+        type: ApplicationCommandOptionType.Number,
+        name: "amount",
+        description: 'rahuli määrä joka lisätään',
+        required: true
+      },
+      {
+        type: ApplicationCommandOptionType.String,
+        name: "id",
+        description: 'id jolle lisätään',
+        required: true
+      }
+    ]
+  },
+  {
+    name: 'checkbets',
+    description: 'Tarkastaa avoimet betit'
+  }
 ];
 
 const rest = new REST({ version: "10" }).setToken(token);
